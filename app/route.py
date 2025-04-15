@@ -32,8 +32,10 @@ def toggle_overlay():
     current_state = data.get('state')
     if current_state == 'on':
         mqtt_client.publish('/overlay/toggle', "turn_on")  # Send message to turn off
+        print("message sent")
     else:
         mqtt_client.publish('/overlay/toggle', "turn_off")  # Send message to turn on
+        
     return jsonify({"status": "toggled", "new_state": "on" if current_state == 'on' else "off"})
 
 
