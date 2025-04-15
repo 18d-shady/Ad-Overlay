@@ -6,8 +6,8 @@ app = Flask(__name__)
 # MQTT Configuration
 app.config['MQTT_BROKER_URL'] = 'broker.emqx.io'
 app.config['MQTT_TRANSPORT'] = 'websockets'
-app.config['MQTT_BROKER_PORT'] = 8083
-app.config['MQTT_TLS_ENABLED'] = False
+app.config['MQTT_BROKER_PORT'] = 8084
+app.config['MQTT_TLS_ENABLED'] = True
 app.config['MQTT_KEEPALIVE'] = 60
 
 
