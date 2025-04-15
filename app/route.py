@@ -22,15 +22,10 @@ def handle_connect(client, userdata, flags, rc):
 def handle_message(client, userdata, msg):
     print(f"Message received: {msg.topic} {msg.payload.decode()}")
 
-def start_mqtt_loop():
-    mqtt_client.loop_forever()
-
-thread = threading.Thread(target=start_mqtt_loop)
-thread.daemon = True
-thread.start()
 
 @app.route('/')
 def index():
+    mqtt_client.publish('/overlay/toggle', 'Hello from Flask-MQTT!')
     return render_template("index.html")
 
 @app.route('/toggle_overlay', methods=['POST'])
