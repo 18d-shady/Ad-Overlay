@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_mqtt import Mqtt
 from app import mqtt_client, app
+import threading
 import os
 import json
 
@@ -21,6 +22,12 @@ def handle_connect(client, userdata, flags, rc):
 def handle_message(client, userdata, msg):
     print(f"Message received: {msg.topic} {msg.payload.decode()}")
 
+def start_mqtt_loop():
+    mqtt_client.loop_forever()
+
+thread = threading.Thread(target=start_mqtt_loop)
+thread.daemon = True
+thread.start()
 
 @app.route('/')
 def index():
