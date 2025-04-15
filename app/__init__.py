@@ -9,9 +9,9 @@ app = Flask(__name__)
 
 # MQTT Configuration
 app.config['MQTT_BROKER_URL'] = 'broker.emqx.io'
+app.config['MQTT_BROKER_PORT'] = 8084  # Secure WebSocket port
+app.config['MQTT_TLS_ENABLED'] = True
 app.config['MQTT_TRANSPORT'] = 'websockets'
-app.config['MQTT_BROKER_PORT'] = 8083
-app.config['MQTT_TLS_ENABLED'] = False
 app.config['MQTT_KEEPALIVE'] = 60
 #app.config['MQTT_TLS_INSECURE'] = False  # Set to True only if you must skip cert checks
 #app.config['MQTT_TLS_CONTEXT'] = context
