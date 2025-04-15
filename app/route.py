@@ -25,7 +25,6 @@ def handle_message(client, userdata, msg):
 
 @app.route('/')
 def index():
-    mqtt_client.publish('/overlay/toggle', 'Hello from Flask-MQTT!')
     return render_template("index.html")
 
 @app.route('/toggle_overlay', methods=['POST'])
