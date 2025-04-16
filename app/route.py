@@ -8,6 +8,8 @@ import json
 
 topic = '/overlay/toggle'
 
+
+
 # Define the on_connect callback
 @mqtt_client.on_connect()
 def handle_connect(client, userdata, flags, rc):
