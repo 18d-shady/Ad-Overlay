@@ -9,6 +9,7 @@ import json
 
 topic = '/overlay/toggle'
 
+mqtt_client = mqtt.Client(clean_session=True, transport="tcp")
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code", rc)
@@ -17,13 +18,16 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(f"Message received: {msg.topic} {msg.payload.decode()}")
 
+mqtt_client.on_connect = on_connect
+mqtt_client.on_message = on_message
+
+
 context = ssl.create_default_context()
 context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
 
-mqtt_client = mqtt.Client(clean_session=True, transport="tcp")
+
 mqtt_client.tls_set_context(context)
-mqtt_client.on_connect = on_connect
-mqtt_client.on_message = on_message
+
 
 # Run MQTT in background
 def mqtt_thread():
@@ -42,10 +46,10 @@ def toggle_overlay():
     data = request.json
     current_state = data.get('state')
     if current_state == 'on':
-        result = mqtt_client.publish('/overlay/toggle', 'turn_on')
+        result = mqtt_client.publish('/overlay/toggle', 'turn_on', qos=1)
         print("Publish result:", result)
     else:
-        mqtt_client.publish('/overlay/toggle', "turn_off")  # Send message to turn on
+        mqtt_client.publish('/overlay/toggle', "turn_off", qos=1)  # Send message to turn on
         
     return jsonify({"status": "toggled", "new_state": "on" if current_state == 'on' else "off"})
 
