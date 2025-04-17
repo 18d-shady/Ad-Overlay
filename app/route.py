@@ -9,7 +9,7 @@ import json
 
 
 MQTT_BROKER = "broker.emqx.io"
-MQTT_PORT = 8883
+MQTT_PORT = 1883
 MQTT_TOPIC = "/overlay/toggle"
 
 mqtt_client = mqtt.Client(clean_session=True, transport="tcp")
@@ -41,7 +41,7 @@ mqtt_client.on_disconnect = on_disconnect
 # TLS Setup using system CA certs (no need for .crt file)
 context = ssl.create_default_context()
 #context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
-mqtt_client.tls_set_context(context)
+#mqtt_client.tls_set_context(context)
 
 
 # Run MQTT client in a background thread
