@@ -9,10 +9,10 @@ import json
 
 
 MQTT_BROKER = "broker.emqx.io"
-MQTT_PORT = 8084
+MQTT_PORT = 8883
 MQTT_TOPIC = "/overlay/toggle"
 
-mqtt_client = mqtt.Client(clean_session=True, transport="websockets")
+mqtt_client = mqtt.Client(clean_session=True, transport="tcp")
 
 
 # MQTT Callbacks
