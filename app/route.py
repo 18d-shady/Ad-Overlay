@@ -20,14 +20,14 @@ def on_message(client, userdata, msg):
 context = ssl.create_default_context()
 context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
 
-mqtt_client = mqtt.Client(clean_session=True, transport="websockets")
+mqtt_client = mqtt.Client(clean_session=True, transport="tcp")
 mqtt_client.tls_set_context(context)
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
 
 # Run MQTT in background
 def mqtt_thread():
-    mqtt_client.connect("broker.emqx.io", 8084, keepalive=60)
+    mqtt_client.connect("broker.emqx.io", 8883, keepalive=60)
     mqtt_client.loop_forever()
 
 threading.Thread(target=mqtt_thread, daemon=True).start()
