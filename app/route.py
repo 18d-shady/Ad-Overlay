@@ -34,7 +34,7 @@ mqtt_client.on_message = on_message
 mqtt_client.on_disconnect = on_disconnect
 
 context = ssl.create_default_context()
-context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
+#context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
 
 
 mqtt_client.tls_set_context(context)
@@ -42,7 +42,7 @@ mqtt_client.tls_set_context(context)
 
 # Run MQTT in background
 def mqtt_thread():
-    mqtt_client.connect("broker.emqx.io", 8883, keepalive=60)
+    mqtt_client.connect("broker.hivemq.com", 8883, keepalive=60)
     mqtt_client.loop_forever()
 
 threading.Thread(target=mqtt_thread, daemon=True).start()
@@ -60,7 +60,7 @@ def toggle_overlay():
         result = mqtt_client.publish('/overlay/toggle', 'turn_on', qos=1)
         print("Publish result:", result)
     else:
-        mqtt_client.publish('/overlay/toggle', "turn_off", qos=1)
+        result = mqtt_client.publish('/overlay/toggle', "turn_off", qos=1)
         print("Publish result:", result)
         
     return jsonify({"status": "toggled", "new_state": "on" if current_state == 'on' else "off"})
