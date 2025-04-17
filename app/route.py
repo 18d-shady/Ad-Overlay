@@ -9,7 +9,7 @@ import json
 
 topic = '/overlay/toggle'
 
-mqtt_client = mqtt.Client()
+mqtt_client = mqtt.Client(clean_session=True, transport="tcp")
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code", rc)
@@ -42,7 +42,7 @@ mqtt_client.tls_set_context(context)
 
 # Run MQTT in background
 def mqtt_thread():
-    mqtt_client.connect("broker.hivemq.com", 8883, keepalive=60)
+    mqtt_client.connect("broker.emqx.io", 8883, keepalive=60)
     mqtt_client.loop_forever()
 
 threading.Thread(target=mqtt_thread, daemon=True).start()
