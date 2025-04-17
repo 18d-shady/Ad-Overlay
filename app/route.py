@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
-from flask_mqtt import Mqtt
-from app import mqtt_client, app
+import paho.mqtt.client as mqtt
 import threading
+import ssl
+from app import app
 import os
 import json
 
@@ -9,20 +10,27 @@ import json
 topic = '/overlay/toggle'
 
 
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code", rc)
+    client.subscribe("/overlay/toggle")
 
-# Define the on_connect callback
-@mqtt_client.on_connect()
-def handle_connect(client, userdata, flags, rc):
-    if rc == 0:
-        print('Connected successfully')
-        mqtt_client.subscribe(topic)
-    else:
-        print('Bad connection. Code:', rc)
-
-# Define the on_message callback
-@mqtt_client.on_message()
-def handle_message(client, userdata, msg):
+def on_message(client, userdata, msg):
     print(f"Message received: {msg.topic} {msg.payload.decode()}")
+
+context = ssl.create_default_context()
+context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
+
+mqtt_client = mqtt.Client(transport="tcp")
+mqtt_client.tls_set_context(context)
+mqtt_client.on_connect = on_connect
+mqtt_client.on_message = on_message
+
+# Run MQTT in background
+def mqtt_thread():
+    mqtt_client.connect("broker.emqx.io", 8883)
+    mqtt_client.loop_forever()
+
+threading.Thread(target=mqtt_thread, daemon=True).start()
 
 
 @app.route('/')
