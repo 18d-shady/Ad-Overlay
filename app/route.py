@@ -9,7 +9,7 @@ import json
 
 topic = '/overlay/toggle'
 
-mqtt_client = mqtt.Client(clean_session=True, transport="tcp")
+mqtt_client = mqtt.Client()
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code", rc)
