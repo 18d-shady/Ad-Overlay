@@ -18,9 +18,20 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(f"Message received: {msg.topic} {msg.payload.decode()}")
 
+def on_disconnect(client, userdata, rc):
+    print(f"Disconnected with result code {rc}")
+    if rc != 0:
+        print("Unexpected disconnect. Trying to reconnect...")
+        try:
+            client.reconnect()
+        except Exception as e:
+            print(f"Reconnect failed: {e}")
+
+mqtt_client.reconnect_delay_set(min_delay=2, max_delay=10)
+
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
-
+mqtt_client.on_disconnect = on_disconnect
 
 context = ssl.create_default_context()
 context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
@@ -49,7 +60,8 @@ def toggle_overlay():
         result = mqtt_client.publish('/overlay/toggle', 'turn_on', qos=1)
         print("Publish result:", result)
     else:
-        mqtt_client.publish('/overlay/toggle', "turn_off", qos=1)  # Send message to turn on
+        mqtt_client.publish('/overlay/toggle', "turn_off", qos=1)
+        print("Publish result:", result)
         
     return jsonify({"status": "toggled", "new_state": "on" if current_state == 'on' else "off"})
 
