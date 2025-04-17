@@ -34,7 +34,7 @@ mqtt_client.on_message = on_message
 mqtt_client.on_disconnect = on_disconnect
 
 context = ssl.create_default_context()
-context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
+#context.load_verify_locations('app/certs/broker.emqx.io-ca.crt')
 
 
 mqtt_client.tls_set_context(context)
@@ -42,7 +42,7 @@ mqtt_client.tls_set_context(context)
 
 # Run MQTT in background
 def mqtt_thread():
-    mqtt_client.connect("broker.emqx.io", 8883, keepalive=60)
+    mqtt_client.connect("broker.hivemq.com", 8883, keepalive=60)
     mqtt_client.loop_forever()
 
 threading.Thread(target=mqtt_thread, daemon=True).start()
